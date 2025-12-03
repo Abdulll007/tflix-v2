@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Movie, TVShow } from '@/types';
-import { getImageUrl } from '@/lib/tmdb';
+import { getImageUrl } from "@/lib/image";
 
 interface MovieCardProps {
   item: Movie | TVShow;

@@ -1,6 +1,6 @@
 import { Movie, TVShow, MovieDetails, TVShowDetails, TMDBResponse, Credits, Episode, Genre } from '@/types';
 
-const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API || '';
+const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || '';
 const BASE_URL = process.env.NEXT_PUBLIC_TMDB_BASE_URL || 'https://api.themoviedb.org/3';
 
 const headers = {

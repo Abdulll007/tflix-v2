@@ -1,12 +1,17 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useEffect, useState, use } from 'react';
-import { getMovieDetails, getMovieCredits, getMovieRecommendations, getImageUrl } from '@/lib/tmdb';
-import MovieCarousel from '@/components/MovieCarousel';
-import VideoPlayerModal from '@/components/VideoPlayerModal';
-import { MovieDetails, Credits, Movie } from '@/types';
-import { Play } from 'lucide-react';
+import { useState, useEffect, use } from "react";
+import {
+  getMovieDetails,
+  getMovieCredits,
+  getMovieRecommendations,
+} from "@/lib/tmdb-server";
+import MovieCarousel from "@/components/MovieCarousel";
+import VideoPlayerModal from "@/components/VideoPlayerModal";
+import { MovieDetails, Credits, Movie } from "@/types";
+import Image from "next/image";
+import { Play, Star, Calendar, Clock } from "lucide-react";
+import { getImageUrl } from "@/lib/image";
 
 interface MoviePageProps {
   params: Promise<{ id: string }>;
@@ -42,7 +47,7 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
           setIsPlayerOpen(true);
         }
       } catch (error) {
-        console.error('Error loading movie:', error);
+        console.error("Error loading movie:", error);
       } finally {
         setLoading(false);
       }
@@ -60,7 +65,7 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
   }
 
   const rating = Math.round(movie.vote_average * 10);
-  const director = credits.crew.find(person => person.job === 'Director');
+  const director = credits.crew.find((person) => person.job === "Director");
 
   return (
     <div>
@@ -69,7 +74,7 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
         <div className="absolute inset-0">
           {movie.backdrop_path ? (
             <Image
-              src={getImageUrl(movie.backdrop_path, 'original')}
+              src={getImageUrl(movie.backdrop_path, "original")}
               alt={movie.title}
               fill
               className="object-cover"
@@ -82,12 +87,13 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
         </div>
 
+        {/* Details */}
         <div className="relative h-full container mx-auto px-4 flex items-end pb-12">
           <div className="flex gap-8 items-end">
             {movie.poster_path && (
               <div className="hidden md:block relative w-48 aspect-[2/3] rounded-lg overflow-hidden flex-shrink-0">
                 <Image
-                  src={getImageUrl(movie.poster_path, 'w500')}
+                  src={getImageUrl(movie.poster_path, "w500")}
                   alt={movie.title}
                   fill
                   className="object-cover"
@@ -97,18 +103,39 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
             )}
 
             <div>
-              <h1 className="text-5xl font-bold mb-4">{movie.title}</h1>
+              <h1 className="text-5xl font-bold mb-2">{movie.title}</h1>
+              <p className="text-gray-400 mb-6">{movie.tagline}</p>
+
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-yellow-400" />
+                  <span>{movie.vote_average.toFixed(1)}/10</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  <span>{new Date(movie.release_date).getFullYear()}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  <span>{movie.runtime} min</span>
+                </div>
+              </div>
               <div className="flex items-center gap-4 text-gray-300 mb-6">
-                <span className={`px-3 py-1 rounded-md text-sm font-semibold ${
-                  rating >= 70 ? 'bg-green-600' : rating >= 50 ? 'bg-yellow-600' : 'bg-red-600'
-                }`}>
+                <span
+                  className={`px-3 py-1 rounded-md text-sm font-semibold ${
+                    rating >= 70
+                      ? "bg-green-600"
+                      : rating >= 50
+                      ? "bg-yellow-600"
+                      : "bg-red-600"
+                  }`}
+                >
                   {rating}%
                 </span>
-                <span>{movie.release_date?.split('-')[0]}</span>
                 <span>{movie.runtime} min</span>
-                <span>{movie.genres.map(g => g.name).join(', ')}</span>
+                <span>{movie.genres.map((g) => g.name).join(", ")}</span>
               </div>
-              
+
               <button
                 onClick={() => setIsPlayerOpen(true)}
                 className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-md font-semibold transition"
@@ -131,7 +158,6 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
           )}
         </section>
 
-        {/* Cast */}
         {credits.cast.length > 0 && (
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Cast</h2>
@@ -141,7 +167,7 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
                   <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-900 mb-2">
                     {person.profile_path ? (
                       <Image
-                        src={getImageUrl(person.profile_path, 'w300')}
+                        src={getImageUrl(person.profile_path, "w300")}
                         alt={person.name}
                         fill
                         className="object-cover"
@@ -161,19 +187,13 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
           </section>
         )}
 
-        {/* Crew */}
-        {director && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Crew</h2>
-            <p className="text-gray-300">
-              <span className="font-semibold">Director:</span> {director.name}
-            </p>
-          </section>
-        )}
-
         {/* Recommendations */}
         {recommendations.length > 0 && (
-          <MovieCarousel title="You May Also Like" items={recommendations.slice(0, 12)} type="movie" />
+          <MovieCarousel
+            title="You May Also Like"
+            items={recommendations}
+            type="movie"
+          />
         )}
       </div>
 

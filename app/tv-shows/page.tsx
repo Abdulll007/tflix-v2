@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import MovieCard from "@/components/MovieCard";
 import Filters from "@/components/Filters";
 import { TVShow, Genre } from "@/types";
-import { discoverTVShows, getTVGenres, searchTVShows } from "@/lib/tmdb";
+import { discoverTVShows, getTVGenres, searchTVShows } from "@/lib/tmdb-server";
 import { Search } from "lucide-react";
 
 export default function TVShowsPage() {
@@ -21,7 +21,11 @@ export default function TVShowsPage() {
   });
 
   useEffect(() => {
-    getTVGenres().then(setGenres);
+    const loadGenres = async () => {
+      const data = await getTVGenres();
+      setGenres(data);
+    };
+    loadGenres();
   }, []);
 
   const loadShows = useCallback(

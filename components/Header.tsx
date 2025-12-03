@@ -112,12 +112,12 @@ export default function Header() {
               >
                 TV Shows
               </Link>
-              <Link 
+              {/* <Link 
                 href="/anime" 
                 className="text-sm text-white/80 hover:text-white transition-colors"
               >
                 Anime
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -129,7 +129,7 @@ export default function Header() {
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-64 bg-black/50 border-white/10 text-white placeholder:text-white/50 focus:border-white/30 pr-10"
+                  className="w-full bg-gray-900 text-white px-4 py-3 pr-12 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
                 <button
                   type="submit"
@@ -177,13 +177,13 @@ export default function Header() {
               >
                 TV Shows
               </Link>
-              <Link 
+              {/* <Link 
                 href="/anime" 
                 className="text-sm text-white/80 hover:text-white transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Anime
-              </Link>
+              </Link> */}
               
               <form onSubmit={handleSearch} className="flex gap-2">
                 <input

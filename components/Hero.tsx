@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Play, Info } from 'lucide-react';
 import { Movie, TVShow } from '@/types';
-import { getImageUrl } from '@/lib/tmdb';
+import { getImageUrl } from "@/lib/image";
 
 interface HeroProps {
   item: Movie | TVShow;

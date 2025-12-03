@@ -1,12 +1,19 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useEffect, useState, use } from 'react';
-import { getTVShowDetails, getTVShowCredits, getTVShowRecommendations, getSeasonEpisodes, getImageUrl } from '@/lib/tmdb';
-import MovieCarousel from '@/components/MovieCarousel';
-import VideoPlayerModal from '@/components/VideoPlayerModal';
-import { TVShowDetails, Credits, TVShow, Episode } from '@/types';
-import { Play } from 'lucide-react';
+import { useState, useEffect, use } from "react";
+import {
+  getTVShowDetails,
+  getTVShowCredits,
+  getTVShowRecommendations,
+  getSeasonEpisodes,
+  
+} from "@/lib/tmdb-server";
+import MovieCarousel from "@/components/MovieCarousel";
+import VideoPlayerModal from "@/components/VideoPlayerModal";
+import { TVShowDetails, Credits, TVShow, Episode } from "@/types";
+import { Play, Star, Calendar, Tv, Clock} from "lucide-react";
+import Image from "next/image";
+import { getImageUrl } from "@/lib/image";
 
 interface TVPageProps {
   params: Promise<{ id: string }>;
@@ -15,8 +22,12 @@ interface TVPageProps {
 
 export default function TVPage({ params, searchParams }: TVPageProps) {
   const { id } = use(params);
-  const { play, season: seasonParam, episode: episodeParam } = use(searchParams);
-  
+  const {
+    play,
+    season: seasonParam,
+    episode: episodeParam,
+  } = use(searchParams);
+
   const tvId = parseInt(id);
   const [tvShow, setTvShow] = useState<TVShowDetails | null>(null);
   const [credits, setCredits] = useState<Credits | null>(null);
@@ -53,7 +64,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
           setIsPlayerOpen(true);
         }
       } catch (error) {
-        console.error('Error loading TV show:', error);
+        console.error("Error loading TV show:", error);
       } finally {
         setLoading(false);
       }
@@ -65,7 +76,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
   useEffect(() => {
     if (tvShow && selectedSeason) {
       getSeasonEpisodes(tvId, selectedSeason)
-        .then(data => setEpisodes(data.episodes))
+        .then((data) => setEpisodes(data.episodes))
         .catch(console.error);
     }
   }, [tvId, selectedSeason, tvShow]);
@@ -92,7 +103,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
         <div className="absolute inset-0">
           {tvShow.backdrop_path ? (
             <Image
-              src={getImageUrl(tvShow.backdrop_path, 'original')}
+              src={getImageUrl(tvShow.backdrop_path, "original")}
               alt={tvShow.name}
               fill
               className="object-cover"
@@ -110,7 +121,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
             {tvShow.poster_path && (
               <div className="hidden md:block relative w-48 aspect-[2/3] rounded-lg overflow-hidden flex-shrink-0">
                 <Image
-                  src={getImageUrl(tvShow.poster_path, 'w500')}
+                  src={getImageUrl(tvShow.poster_path, "w500")}
                   alt={tvShow.name}
                   fill
                   className="object-cover"
@@ -120,16 +131,38 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
             )}
 
             <div>
-              <h1 className="text-5xl font-bold mb-4">{tvShow.name}</h1>
+              <h1 className="text-5xl font-bold mb-2">{tvShow.name}</h1>
+              <p className="text-gray-400 mb-6">{tvShow.tagline}</p>
+
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-yellow-400" />
+                  <span>{tvShow.vote_average.toFixed(1)}/10</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  <span>{new Date(tvShow.first_air_date).getFullYear()}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  <span>{tvShow.episode_run_time[0]} min</span>
+                </div>
+              </div>
               <div className="flex items-center gap-4 text-gray-300 mb-6">
-                <span className={`px-3 py-1 rounded-md text-sm font-semibold ${
-                  rating >= 70 ? 'bg-green-600' : rating >= 50 ? 'bg-yellow-600' : 'bg-red-600'
-                }`}>
+                <span
+                  className={`px-3 py-1 rounded-md text-sm font-semibold ${
+                    rating >= 70
+                      ? "bg-green-600"
+                      : rating >= 50
+                      ? "bg-yellow-600"
+                      : "bg-red-600"
+                  }`}
+                >
                   {rating}%
                 </span>
-                <span>{tvShow.first_air_date?.split('-')[0]}</span>
+                
                 <span>{tvShow.number_of_seasons} Seasons</span>
-                <span>{tvShow.genres.map(g => g.name).join(', ')}</span>
+                <span>{tvShow.genres.map((g) => g.name).join(", ")}</span>
               </div>
 
               <button
@@ -157,24 +190,24 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
         {/* Seasons & Episodes */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6">Seasons & Episodes</h2>
-          
+
           {/* Season Selector */}
           <div className="flex gap-2 mb-6 flex-wrap">
             {tvShow.seasons
-              .filter(season => season.season_number > 0)
+              .filter((season) => season.season_number > 0)
               .map((season) => (
-              <button
-                key={season.id}
-                onClick={() => setSelectedSeason(season.season_number)}
-                className={`px-4 py-2 rounded-md font-semibold transition ${
-                  selectedSeason === season.season_number
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                Season {season.season_number}
-              </button>
-            ))}
+                <button
+                  key={season.id}
+                  onClick={() => setSelectedSeason(season.season_number)}
+                  className={`px-4 py-2 rounded-md font-semibold transition ${
+                    selectedSeason === season.season_number
+                      ? "bg-red-600 text-white"
+                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                  }`}
+                >
+                  Season {season.season_number}
+                </button>
+              ))}
           </div>
 
           {/* Episodes Grid */}
@@ -188,7 +221,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
                 <div className="relative w-full aspect-video bg-gray-800">
                   {episode.still_path ? (
                     <Image
-                      src={getImageUrl(episode.still_path, 'w300')}
+                      src={getImageUrl(episode.still_path, "w300")}
                       alt={episode.name}
                       fill
                       className="object-cover"
@@ -203,12 +236,14 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
                     {episode.runtime} min
                   </div>
                 </div>
-                
+
                 <div className="p-4">
                   <h3 className="font-semibold mb-2">
                     {episode.episode_number}. {episode.name}
                   </h3>
-                  <p className="text-gray-400 text-sm line-clamp-2">{episode.overview}</p>
+                  <p className="text-gray-400 text-sm line-clamp-2">
+                    {episode.overview}
+                  </p>
                 </div>
               </div>
             ))}
@@ -225,7 +260,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
                   <div className="relative aspect-[2/3] rounded-lg overflow-hidden bg-gray-900 mb-2">
                     {person.profile_path ? (
                       <Image
-                        src={getImageUrl(person.profile_path, 'w300')}
+                        src={getImageUrl(person.profile_path, "w300")}
                         alt={person.name}
                         fill
                         className="object-cover"
@@ -247,7 +282,11 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
 
         {/* Recommendations */}
         {recommendations.length > 0 && (
-          <MovieCarousel title="You May Also Like" items={recommendations.slice(0, 12)} type="tv" />
+          <MovieCarousel
+            title="You May Also Like"
+            items={recommendations.slice(0, 12)}
+            type="tv"
+          />
         )}
       </div>
 
@@ -269,16 +308,14 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
                 onClick={() => setSelectedEpisode(ep.episode_number)}
                 className={`w-full text-left p-3 rounded-lg transition ${
                   selectedEpisode === ep.episode_number
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    ? "bg-red-600 text-white"
+                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
                 }`}
               >
                 <div className="font-semibold text-sm mb-1">
                   {ep.episode_number}. {ep.name}
                 </div>
-                <div className="text-xs opacity-80">
-                  {ep.runtime} min
-                </div>
+                <div className="text-xs opacity-80">{ep.runtime} min</div>
               </button>
             ))}
           </div>

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import MovieCard from "@/components/MovieCard";
 import Filters from "@/components/Filters";
 import { Movie, Genre } from "@/types";
-import { discoverMovies, getMovieGenres, searchMovies } from "@/lib/tmdb";
+import { discoverMovies, getMovieGenres, searchMovies } from "@/lib/tmdb-server";
 import { Search } from "lucide-react";
 
 export default function MoviesPage() {
@@ -21,7 +21,11 @@ export default function MoviesPage() {
   });
 
   useEffect(() => {
-    getMovieGenres().then(setGenres);
+    const loadGenres = async () => {
+      const data = await getMovieGenres();
+      setGenres(data);
+    };
+    loadGenres();
   }, []);
 
   const loadMovies = useCallback(
