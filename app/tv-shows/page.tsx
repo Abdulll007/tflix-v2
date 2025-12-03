@@ -6,7 +6,7 @@ import Filters from "@/components/Filters";
 import { TVShow, Genre } from "@/types";
 import { discoverTVShows, getTVGenres, searchTVShows } from "@/lib/tmdb-server";
 import { Search } from "lucide-react";
-
+import { generateShortUUID } from "@/lib/uuid-generator";
 export default function TVShowsPage() {
   const [shows, setShows] = useState<TVShow[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -97,7 +97,7 @@ export default function TVShowsPage() {
       {/* TV Shows Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {shows.map((show) => (
-          <MovieCard key={show.id} item={show} type="tv" />
+          <MovieCard key={`${show.id}${generateShortUUID()}`} item={show} type="tv" />
         ))}
       </div>
 

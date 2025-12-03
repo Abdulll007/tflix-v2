@@ -6,6 +6,7 @@ import Filters from "@/components/Filters";
 import { Movie, Genre } from "@/types";
 import { discoverMovies, getMovieGenres, searchMovies } from "@/lib/tmdb-server";
 import { Search } from "lucide-react";
+import { generateShortUUID } from "@/lib/uuid-generator";
 
 export default function MoviesPage() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -98,7 +99,7 @@ export default function MoviesPage() {
       {/* Movies Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {movies.map((movie) => (
-          <MovieCard key={movie.id} item={movie} type="movie" />
+          <MovieCard key={`${movie.id}${generateShortUUID()}`} item={movie} type="movie" />
         ))}
       </div>
 

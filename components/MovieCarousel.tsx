@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCallback } from 'react';
 import MovieCard from './MovieCard';
 import { Movie, TVShow } from '@/types';
-
+import { generateShortUUID } from "@/lib/uuid-generator";
 interface MovieCarouselProps {
   title: string;
   items: (Movie | TVShow)[];
@@ -47,7 +47,7 @@ export default function MovieCarousel({ title, items, type }: MovieCarouselProps
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex gap-4 px-4">
             {items.map((item) => (
-              <div key={item.id} className="flex-[0_0_auto] w-[150px] sm:w-[180px] md:w-[200px] lg:w-[220px] ">
+              <div key={`${item.id}${generateShortUUID()}`} className="flex-[0_0_auto] w-[150px] sm:w-[180px] md:w-[200px] lg:w-[220px] ">
                 <MovieCard item={item} type={type} />
               </div>
             ))}
