@@ -101,13 +101,13 @@ export default function Header() {
                 Home
               </Link>
               <Link 
-                href="/movies" 
+                href="/movies?page=1" 
                 className="text-sm text-white/80 hover:text-white transition-colors"
               >
                 Movies
               </Link>
               <Link 
-                href="/tv-shows" 
+                href="/tv-shows?page=1" 
                 className="text-sm text-white/80 hover:text-white transition-colors"
               >
                 TV Shows

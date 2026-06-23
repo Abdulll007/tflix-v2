@@ -14,8 +14,8 @@ export default function MovieCard({ item, type }: MovieCardProps) {
   const rating = Math.round(item.vote_average * 10);
 
   return (
-    <Link href={`/${type}/${item.id}`} className="group">
-      <div className="relative aspect-[2/3] overflow-hidden rounded-lg bg-gray-900">
+    <Link href={`/${type}/${item.id}`} className="group ">
+      <div className="relative aspect-2/3 overflow-hidden rounded-lg bg-gray-900 ">
         {item.poster_path ? (
           <Image
             src={getImageUrl(item.poster_path, 'w300')}
@@ -37,8 +37,8 @@ export default function MovieCard({ item, type }: MovieCardProps) {
         </div>
       </div>
       
-      <div className="mt-2">
-        <h3 className="text-white font-medium line-clamp-1 group-hover:text-red-600 transition">
+      <div className="mt-2 ">
+        <h3 className="text-white font-medium line-clamp-1  transition">
           {title}
         </h3>
         {date && (

@@ -167,7 +167,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
 
               <button
                 onClick={() => setIsPlayerOpen(true)}
-                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-md font-semibold transition"
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-md font-semibold transition cursor-pointer"
               >
                 <Play className="w-5 h-5" />
                 Play Now

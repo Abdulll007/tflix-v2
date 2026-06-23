@@ -5,13 +5,18 @@ import { useState, useEffect } from 'react';
 
 interface FiltersProps {
   genres: Genre[];
+  value:{
+    genre: string;
+    sortBy: string;
+    year: string;
+  }
   onFilterChange: (filters: { genre: string; sortBy: string; year: string }) => void;
 }
 
-export default function Filters({ genres, onFilterChange }: FiltersProps) {
-  const [selectedGenre, setSelectedGenre] = useState('');
-  const [selectedSort, setSelectedSort] = useState('popularity.desc');
-  const [selectedYear, setSelectedYear] = useState('');
+export default function Filters({value, genres, onFilterChange }: FiltersProps) {
+  const [selectedGenre, setSelectedGenre] = useState(value.genre);
+  const [selectedSort, setSelectedSort] = useState(value.sortBy);
+  const [selectedYear, setSelectedYear] = useState(value.year);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
