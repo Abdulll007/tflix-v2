@@ -1,5 +1,7 @@
 import React from 'react'
-import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
+
+
+import { FaYoutube ,FaFacebook,FaTwitter,FaInstagram} from "react-icons/fa";
 import Link from 'next/link'
 
 const Footer = () => {
@@ -15,10 +17,10 @@ const Footer = () => {
   ]
 
   const socialLinks = [
-    { icon: Facebook, href: '#' },
-    { icon: Twitter, href: '#' },
-    { icon: Instagram, href: '#' },
-    { icon: Youtube, href: '#' },
+    { icon: FaFacebook, href: '#' },
+    { icon: FaTwitter, href: '#' },
+    { icon: FaInstagram, href: '#' },
+    { icon: FaYoutube, href: '#' },
   ]
 
   return (

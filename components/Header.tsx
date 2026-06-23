@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Menu, X} from 'lucide-react';
+import {FaSearch} from "react-icons/fa";
+import { IoClose ,IoMenu} from "react-icons/io5";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -86,7 +87,7 @@ export default function Header() {
     // </header>
 
     <nav className=" fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-white/5">
-      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-450 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link href="/" className="text-red-600 text-3xl font-bold tracking-wider">
@@ -137,7 +138,7 @@ export default function Header() {
                   // variant="ghost"
                   className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                 >
-                  <Search className="h-4 w-4 text-white/70" />
+                  <FaSearch className="h-9 w-4 text-white/70" />
                 </button>
               </div>
             </form>
@@ -148,7 +149,7 @@ export default function Header() {
               className="md:hidden text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {mobileMenuOpen ? <IoClose className="h-5 w-5" /> : <IoMenu className="h-5 w-5" />}
             </button>
           </div>
         </div>
@@ -194,7 +195,7 @@ export default function Header() {
                   className="w-full bg-gray-900 text-white px-4 py-3 pr-12 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
                 />
                 <button type="submit"  className="text-white">
-                  <Search className="h-9 w-4 " />
+                  <FaSearch className="h-9 w-4 " />
                 </button>
               </form>
             </div>

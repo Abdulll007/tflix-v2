@@ -6,7 +6,7 @@ import Filters from "@/components/Filters";
 import Pagination from "@/components/Pagination";
 import { TVShow, Genre } from "@/types";
 import { discoverTVShows, getTVGenres, searchTVShows } from "@/lib/tmdb-server";
-import { Search } from "lucide-react";
+import { FaSearch } from "react-icons/fa";
 import { useListParams } from "@/hooks/useListParams";
 
 function TVShowsContent() {
@@ -79,7 +79,7 @@ function TVShowsContent() {
               onChange={(e) => setSearchInput(e.target.value)}
               className="w-full bg-gray-900 text-white px-4 py-3 pr-12 rounded-md focus:outline-none focus:ring-2 focus:ring-red-600"
             />
-            <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <FaSearch className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           </div>
         </form>
 

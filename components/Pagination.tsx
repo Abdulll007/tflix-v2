@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 
 interface PaginationProps {
   page: number;
@@ -49,7 +49,7 @@ export default function Pagination({
         aria-label="Previous page"
         className={`${btn} bg-gray-900 text-white hover:bg-gray-800 flex items-center`}
       >
-        <ChevronLeft className="w-4 h-4" />
+        <FaAngleLeft className="w-4 h-4" />
       </button>
 
       {pages.map((p, idx) =>
@@ -79,7 +79,7 @@ export default function Pagination({
         aria-label="Next page"
         className={`${btn} bg-gray-900 text-white hover:bg-gray-800 flex items-center`}
       >
-        <ChevronRight className="w-4 h-4" />
+        <FaAngleRight className="w-4 h-4" />
       </button>
     </nav>
   );

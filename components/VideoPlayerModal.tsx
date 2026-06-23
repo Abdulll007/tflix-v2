@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
 
 interface VideoPlayerModalProps {
@@ -103,7 +103,7 @@ export default function VideoPlayerModal({
         className="absolute top-4 right-4 z-50 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full transition"
         aria-label="Close"
       >
-        <X className="w-6 h-6" />
+        <IoClose className="w-6 h-6" />
       </button>
 
       {/* Content */}

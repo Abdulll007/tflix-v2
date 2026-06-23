@@ -1,6 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, Info } from 'lucide-react';
+
+import { MdOutlinePlayCircle, MdInfoOutline } from "react-icons/md";
+
+
+
 import { Movie, TVShow } from '@/types';
 import { getImageUrl } from "@/lib/image";
 
@@ -65,7 +69,7 @@ export default function Hero({ item, type }: HeroProps) {
               href={`/${type}/${item.id}?play=true`}
               className="flex items-center space-x-2 bg-red-600 text-white px-8 py-3 rounded-md font-semibold hover:bg-gray-200 transition"
             >
-              <Play className="w-5 h-5" />
+              <MdOutlinePlayCircle className="w-5 h-5" />
               <span>Play</span>
             </Link>
             
@@ -73,7 +77,7 @@ export default function Hero({ item, type }: HeroProps) {
               href={`/${type}/${item.id}`}
               className="flex items-center space-x-2 bg-gray-600/80 text-white px-8 py-3 rounded-md font-semibold hover:bg-gray-600 transition"
             >
-              <Info className="w-5 h-5" />
+              <MdInfoOutline className="w-5 h-5" />
               <span>More Info</span>
             </Link>
           </div>

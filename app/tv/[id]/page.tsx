@@ -11,7 +11,7 @@ import {
 import MovieCarousel from "@/components/MovieCarousel";
 import VideoPlayerModal from "@/components/VideoPlayerModal";
 import { TVShowDetails, Credits, TVShow, Episode } from "@/types";
-import { Play, Star, Calendar, Tv, Clock} from "lucide-react";
+import {FaPlay,FaStar,FaCalendar,FaClock} from "react-icons/fa"
 import Image from "next/image";
 import { getImageUrl } from "@/lib/image";
 
@@ -136,15 +136,15 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
 
               <div className="flex flex-wrap gap-4 mb-6">
                 <div className="flex items-center gap-2">
-                  <Star className="w-5 h-5 text-yellow-400" />
+                  <FaStar className="w-5 h-5 text-yellow-400" />
                   <span>{tvShow.vote_average.toFixed(1)}/10</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
+                  <FaCalendar className="w-5 h-5" />
                   <span>{new Date(tvShow.first_air_date).getFullYear()}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
+                  <FaClock className="w-5 h-5" />
                   <span>{tvShow.episode_run_time[0]} min</span>
                 </div>
               </div>
@@ -169,7 +169,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
                 onClick={() => setIsPlayerOpen(true)}
                 className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-md font-semibold transition cursor-pointer"
               >
-                <Play className="w-5 h-5" />
+                <FaPlay className="w-5 h-5" />
                 Play Now
               </button>
             </div>

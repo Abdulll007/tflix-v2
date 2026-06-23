@@ -1,7 +1,7 @@
 'use client';
 
 import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MovieCard from './MovieCard';
 import { Movie, TVShow } from '@/types';
@@ -85,7 +85,7 @@ export default function MovieCarousel({ title, items, type }: MovieCarouselProps
             className={`${arrowBase} left-0 rounded-r-md`}
             aria-label="Previous"
           >
-            <ChevronLeft className="w-8 h-8" />
+            <FaAngleLeft className="w-8 h-8" />
           </button>
         )}
 
@@ -111,7 +111,7 @@ export default function MovieCarousel({ title, items, type }: MovieCarouselProps
             className={`${arrowBase} right-0 rounded-l-md`}
             aria-label="Next"
           >
-            <ChevronRight className="w-8 h-8" />
+            <FaAngleRight className="w-8 h-8" />
           </button>
         )}
       </div>

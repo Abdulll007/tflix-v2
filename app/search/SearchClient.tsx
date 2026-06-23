@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import MovieCard from '@/components/MovieCard';
 import { Movie, TVShow } from '@/types';
 import { searchMovies, searchTVShows } from '@/lib/tmdb-server';
-import { Search } from 'lucide-react';
+import { FaSearch} from "react-icons/fa";
+
 import {  generateShortUUID } from '@/lib/uuid-generator';
 type FilterType = 'all' | 'movies' | 'tv';
 
@@ -111,7 +112,7 @@ export default function SearchContent() {
             className="w-full bg-gray-900 text-white px-6 py-4 pr-14 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-red-600"
           />
           <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2">
-            <Search className="w-6 h-6 text-gray-400" />
+            <FaSearch className="w-6 h-6 text-gray-400" />
           </button>
         </div>
       </form>
@@ -160,7 +161,7 @@ export default function SearchContent() {
       {/* Results */}
       {!loading && query && movies.length === 0 && tvShows.length === 0 && (
         <div className="text-center py-12 text-gray-400">
-          No results found for "{query}"
+          No results found for &lsquo; {query}{" "} &rsquo;
         </div>
       )}
 
