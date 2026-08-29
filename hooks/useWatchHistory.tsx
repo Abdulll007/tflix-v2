@@ -10,7 +10,7 @@ export type WatchHistoryRecord = {
   season?: number;
   episode?: number;
   title?: string;
-  poster?: string;
+  poster?: string | null;
   updatedAt: number;
 
 };
