@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero';
+import RecentlyWatched from '@/components/RecentlyWatched';
 import MovieCarousel from '@/components/MovieCarousel';
 import {
   getTrendingMovies,
@@ -26,6 +27,10 @@ export default async function HomePage() {
   return (
     <div>
       {heroItem && <Hero item={heroItem} type="movie" />}
+
+      <div className="container mx-auto py-8">
+        <RecentlyWatched />
+      </div>
 
       <div className="container mx-auto space-y-12 py-12">
         <MovieCarousel title="Trending Movies" items={trendingMovies} type="movie" />

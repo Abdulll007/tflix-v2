@@ -2,6 +2,8 @@
 
 import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
+import useWatchHistory from "@/hooks/useWatchHistory";
+import { movieServers, tvServers } from "@/lib/streaming-servers";
 
 interface VideoPlayerModalProps {
   isOpen: boolean;
@@ -22,52 +24,9 @@ export default function VideoPlayerModal({
   episode,
   children,
 }: VideoPlayerModalProps) {
-  const movieServers = [
-
-    { name: "Server-1", url: (id: number) => `${process.env.NEXT_PUBLIC_MOVIE_URL} ${id}?primaryColor=e7000b&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=false&nextbutton=true` },
-    {
-      name: "Server-2",
-      url: (id: number) => `${process.env.NEXT_PUBLIC_MOVIE_URL2}${id}&tmdb=1`,
-    },
-    {
-      name: "Server-3",
-      url: (id: number) =>
-        `${process.env.NEXT_PUBLIC_MOVIE_URL3}${id}&ds_lang=en`,
-    },
-  
-    {
-      name: "Server-4",
-      url: (id: number) => `${process.env.NEXT_PUBLIC_MOVIE_URL4}${id}`,
-    },
-  ];
-
-  const tvServers = [
-    {
-      name: "Server-1",
-      url: (id: number, s: number, e: number) =>
-        `${process.env.NEXT_PUBLIC_TV_URL}${id}/${s}/${e}?primaryColor=e7000b&secondaryColor=a2a2a2&iconColor=eefdec&icons=default&player=default&title=true&poster=true&autoplay=false&nextbutton=true`,
-    },
-    
-    {
-      name: "Server-2",
-      url: (id: number, s: number, e: number) =>
-        `${process.env.NEXT_PUBLIC_TV_URL2}${id}&tmdb=1&s=${s}&e=${e}`,
-    },
-    {
-      name: "Server-3",
-      url: (id: number, s: number, e: number) =>
-        `${process.env.NEXT_PUBLIC_TV_URL3}${id}&season=${s}&episode=${e}&ds_lang=en`,
-    },
-    {
-      name: "Server-4",
-      url: (id: number, s: number, e: number) =>
-        `${process.env.NEXT_PUBLIC_TV_URL}${id}&season=${s}&episode=${e}`,
-    },
-    
-  ];
-
   const servers = type === "movie" ? movieServers : tvServers;
   const [selectedServer, setSelectedServer] = useState(0);
+  const { save, get } = useWatchHistory();
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -88,6 +47,39 @@ export default function VideoPlayerModal({
     }
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
+
+  // Initialize selected server from history when opening
+  useEffect(() => {
+    if (!isOpen) return;
+    try {
+      const history = get(type, tmdbId);
+      if (history?.server) {
+        const idx = servers.findIndex((s) => s.name === history.server);
+        if (idx >= 0) setSelectedServer(idx);
+      }
+    } catch (e) {
+      console.error("Failed to load watch history", e);
+    }
+  }, [isOpen, get, type, tmdbId, servers]);
+
+  // Persist last-watched info to localStorage when player details change
+  useEffect(() => {
+    if (!isOpen) return;
+    try {
+      const existing = get(type, tmdbId);
+      save({
+        type,
+        tmdbId,
+        server: servers[selectedServer]?.name,
+        season: season ?? undefined,
+        episode: episode ?? undefined,
+        title: existing?.title,
+        poster: existing?.poster,
+      });
+    } catch (e) {
+      console.error("Failed to save watch history", e);
+    }
+  }, [isOpen, selectedServer, season, episode, tmdbId, type, save, servers, get]);
 
   if (!isOpen) return null;
 

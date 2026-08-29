@@ -6,6 +6,7 @@ import {
   getMovieCredits,
   getMovieRecommendations,
 } from "@/lib/tmdb-server";
+import useWatchHistory, { WatchHistoryRecord } from "@/hooks/useWatchHistory";
 import MovieCarousel from "@/components/MovieCarousel";
 import VideoPlayerModal from "@/components/VideoPlayerModal";
 import { MovieDetails, Credits, Movie } from "@/types";
@@ -29,6 +30,8 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
   const [recommendations, setRecommendations] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const [lastWatch, setLastWatch] = useState<WatchHistoryRecord | null>(null);
+  const { get, save } = useWatchHistory();
 
   useEffect(() => {
     async function loadData() {
@@ -43,9 +46,15 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
         setMovie(movieData);
         setCredits(creditsData);
         setRecommendations(recsData);
-
         if (play) {
           setIsPlayerOpen(true);
+        }
+
+        try {
+          const history = get("movie", movieId);
+          setLastWatch(history);
+        } catch (e) {
+          console.error("Failed to read movie watch history", e);
         }
       } catch (error) {
         console.error("Error loading movie:", error);
@@ -138,12 +147,25 @@ export default function MoviePage({ params, searchParams }: MoviePageProps) {
               </div>
 
               <button
-                onClick={() => setIsPlayerOpen(true)}
+                onClick={() => {
+                  try {
+                    save({ type: "movie", tmdbId: movieId, title: movie.title, poster: movie.poster_path });
+                    setLastWatch({ type: "movie", tmdbId: movieId, title: movie.title, poster: movie.poster_path, updatedAt: Date.now() });
+                  } catch (e) {
+                    console.error("Failed to save movie watch history on play", e);
+                  }
+                  setIsPlayerOpen(true);
+                }}
                 className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-md font-semibold transition"
               >
                 <FaPlay className="w-5 h-5" />
                 Play Now
               </button>
+              {lastWatch && (
+                <div className="text-sm text-yellow-300 mt-2">
+                  Last watched on {lastWatch.server}
+                </div>
+              )}
             </div>
           </div>
         </div>

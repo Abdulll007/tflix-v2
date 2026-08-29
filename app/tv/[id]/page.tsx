@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
+import useWatchHistory, { WatchHistoryRecord } from "@/hooks/useWatchHistory";
 import {
   getTVShowDetails,
   getTVShowCredits,
@@ -35,8 +36,10 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [selectedEpisode, setSelectedEpisode] = useState(1);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [lastWatch, setLastWatch] = useState<WatchHistoryRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const { get, save } = useWatchHistory();
 
   useEffect(() => {
     async function loadData() {
@@ -52,8 +55,15 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
         setCredits(creditsData);
         setRecommendations(recsData);
 
-        const initialSeason = seasonParam ? parseInt(seasonParam) : 1;
-        const initialEpisode = episodeParam ? parseInt(episodeParam) : 1;
+        const history = (typeof window !== "undefined") ? get("tv", tvId) : null;
+        setLastWatch(history);
+
+        const initialSeason = seasonParam
+          ? parseInt(seasonParam)
+          : history?.season ?? 1;
+        const initialEpisode = episodeParam
+          ? parseInt(episodeParam)
+          : history?.episode ?? 1;
         setSelectedSeason(initialSeason);
         setSelectedEpisode(initialEpisode);
 
@@ -83,6 +93,21 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
 
   const handleEpisodeClick = (episodeNum: number) => {
     setSelectedEpisode(episodeNum);
+    const newRec = {
+      type: "tv" as const,
+      tmdbId: tvId,
+      server: lastWatch?.server,
+      season: selectedSeason,
+      episode: episodeNum,
+      title: tvShow?.name,
+      poster: tvShow?.poster_path,
+    };
+    try {
+      save(newRec);
+    } catch (e) {
+      console.error("Failed to save watch history on episode click", e);
+    }
+    setLastWatch((prev) => ({ ...(prev ?? {}), ...newRec, updatedAt: Date.now() } as any));
     setIsPlayerOpen(true);
   };
 
@@ -96,6 +121,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
 
   const rating = Math.round(tvShow.vote_average * 10);
 
+  console.log(lastWatch)
   return (
     <div>
       {/* Hero Section */}
@@ -166,7 +192,24 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
               </div>
 
               <button
-                onClick={() => setIsPlayerOpen(true)}
+                onClick={() => {
+                  try {
+                    const rec = {
+                      type: "tv" as const,
+                      tmdbId: tvId,
+                      server: lastWatch?.server,
+                      season: selectedSeason,
+                      episode: selectedEpisode,
+                      title: tvShow?.name,
+                      poster: tvShow?.poster_path,
+                    };
+                    save(rec);
+                    setLastWatch({ ...(lastWatch ?? {}), ...rec, updatedAt: Date.now() } as any);
+                  } catch (e) {
+                    console.error("Failed to save watch history on Play Now", e);
+                  }
+                  setIsPlayerOpen(true);
+                }}
                 className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-md font-semibold transition cursor-pointer"
               >
                 <FaPlay className="w-5 h-5" />
@@ -215,7 +258,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
             {episodes.map((episode) => (
               <div
                 key={episode.id}
-                className="bg-gray-900 rounded-lg overflow-hidden hover:bg-gray-800 transition cursor-pointer"
+                className={`${lastWatch &&  episode?.episode_number === lastWatch.episode? "bg-red-600" : "bg-gray-900"} rounded-lg overflow-hidden hover:bg-gray-800 transition cursor-pointer`}
                 onClick={() => handleEpisodeClick(episode.episode_number)}
               >
                 <div className="relative w-full aspect-video bg-gray-800">
@@ -232,6 +275,13 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
                       No Image
                     </div>
                   )}
+                  {lastWatch &&
+                    lastWatch.season === selectedSeason &&
+                    lastWatch.episode === episode.episode_number && (
+                      <div className="absolute top-2 left-2 bg-red-600 text-xs px-2 py-1 rounded text-white">
+                        Resume
+                      </div>
+                    )}
                   <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-xs">
                     {episode.runtime} min
                   </div>
@@ -315,6 +365,11 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
                 <div className="font-semibold text-sm mb-1">
                   {ep.episode_number}. {ep.name}
                 </div>
+                {lastWatch &&
+                  lastWatch.season === selectedSeason &&
+                  lastWatch.episode === ep.episode_number && (
+                    <div className="text-xs text-yellow-300 mb-1">Last watched</div>
+                  )}
                 <div className="text-xs opacity-80">{ep.runtime} min</div>
               </button>
             ))}
@@ -324,3 +379,5 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
     </div>
   );
 }
+
+
