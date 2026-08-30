@@ -121,7 +121,6 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
 
   const rating = Math.round(tvShow.vote_average * 10);
 
-  console.log(lastWatch)
   return (
     <div>
       {/* Hero Section */}
@@ -355,7 +354,7 @@ export default function TVPage({ params, searchParams }: TVPageProps) {
             {episodes.map((ep) => (
               <button
                 key={ep.id}
-                onClick={() => setSelectedEpisode(ep.episode_number)}
+                onClick={() => handleEpisodeClick(ep.episode_number)}
                 className={`w-full text-left p-3 rounded-lg transition ${
                   selectedEpisode === ep.episode_number
                     ? "bg-red-600 text-white"
