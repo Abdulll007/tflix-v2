@@ -28,11 +28,10 @@ export default async function HomePage() {
     <div>
       {heroItem && <Hero item={heroItem} type="movie" />}
 
-      <div className="container mx-auto py-8">
-        <RecentlyWatched />
-      </div>
+     
 
-      <div className="container mx-auto space-y-12 py-12">
+      <div className="container mx-auto space-y-12 py-12 px-4">
+        <RecentlyWatched />
         <MovieCarousel title="Trending Movies" items={trendingMovies} type="movie" />
         <MovieCarousel title="Trending TV Shows" items={trendingTV} type="tv" />
         <MovieCarousel title="Upcoming Releases" items={upcoming} type="movie" />
